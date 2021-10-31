@@ -48,3 +48,12 @@ class CreateNewPostView(CreateView):
     """
     Create a new post in a section
     """
+
+    model = KookaburraPost
+    fields = ["section", "title", "content"]
+    template_name = "kookaburra/new/post.html"
+
+    def get_form_kwargs(self, **kwargs):
+        form_kwargs = super().get_form_kwargs()
+
+        return form_kwargs

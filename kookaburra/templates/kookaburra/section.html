@@ -4,8 +4,9 @@
 <p>
 {{section.description}}
 </p>
+<a href='{% url "general-view" %}'>Go back to General</a>
 
-<p> Make a new post <a href=''>here</a> </p>
+<p> Make a new post <a href='{% url "new-post-view" section.slug %}'>here</a> </p>
 <p>Posts: <ul>
     {% for post in section.posts.all %} 
     {% include "kookaburra/bits/post-link-list.html" %}
