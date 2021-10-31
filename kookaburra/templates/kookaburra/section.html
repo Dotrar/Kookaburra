@@ -1,0 +1,29 @@
+<h5>Individual Section View</h5>
+<hr>
+<h3> {{ section.name }} </h3>
+<p>
+{{section.description}}
+</p>
+
+<p> Make a new post <a href=''>here</a> </p>
+<p>Posts: <ul>
+    {% for post in section.posts.all %} 
+    {% include "kookaburra/bits/post-link-list.html" %}
+    {% endfor %}
+</ul>
+</p>
+
+
+<p>Members: <ul>
+    {% for member in section.members.all %} 
+    <li>{{member}} </li>
+    {% endfor %}
+</ul>
+</p>
+
+<p>Followers: <ul>
+    {% for follower in section.followers.all %} 
+    <li>{{follower}} </li>
+    {% endfor %}
+</ul>
+</p>

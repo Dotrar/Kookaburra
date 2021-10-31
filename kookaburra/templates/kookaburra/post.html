@@ -1,0 +1,29 @@
+{% extends "kookaburra/base.html" %}
+{% block content %}
+<h5>Individual Post View</h5>
+<hr>
+<h3> {{ post.title }} </h3>
+<h4> Posted in: <a href='{{post.section.get_absolute_url}}'>{{ post.section }}</a></h4>
+<p>Author: {{post.author}} </p>
+<p>Created: {{ post.created_at }} </p>
+<p>Last Updated: {{ post.updated_at }} </p>
+<p>Content: {{ post.content }} </p>
+<p>Followers: <ul>
+    {% for follower in  post.followers.all %} 
+    <li>{{follower}} </li>
+    {% endfor %}
+    </ul>
+</p>
+<hr>
+{% for comment in post.comments.all %}
+<div class='post-comment'>
+    <p>{{ comment.content }}</p>
+    <p>By: {{ comment.author }}</p>
+</div>
+{% empty %}
+<div class='post-comment'>
+    There's no comments yet! 
+</div>
+{% endfor %}
+<h4>Make a comment:</h4>
+{% endblock%}

@@ -1,0 +1,13 @@
+/* TODO find-replace all px values */
+div.post-comment {
+    margin: 5px;
+    padding: 5px;
+    border: 1px solid red;
+    border-radius: 5px;
+}
+div.post-list-view {
+    margin: 5px;
+    padding: 5px;
+    border: 1px solid blue;
+    border-radius: 5px;
+}
