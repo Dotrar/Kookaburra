@@ -77,6 +77,10 @@ class KookaburraPost(models.Model):
     # Metadata can be used to store some bits of information; such as last user.
     metadata = models.JSONField(blank=True, default=dict)
 
+    # permissions TODO
+
+    commenting_allowed = models.BooleanField(default=True)
+
     def __str__(self):
         return f'"{self.title}" (in {self.section})'
 

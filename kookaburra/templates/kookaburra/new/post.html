@@ -1,9 +1,6 @@
 {% extends "kookaburra/base.html" %}
 {% block content %}
-<h5>Create New Post</h5>
+<h3>Create New Post</h3>
 <hr>
-<form>
-    {{ form.as_p }}
-    <button type='submit'>Submit</button>
-</form>
+{% include "kookaburra/bits/base-form.html"%}
 {% endblock%}
