@@ -27,7 +27,7 @@
 {% endfor %}
 
 <h4>Make a comment:</h4>
-{% include "kookaburra/bits/base-form.html" with form=comment_form %}
+{% include "kookaburra/bits/base-form.html" with form=comment_form direct_to="post-comment" %}
 
 {% include "kookaburra/bits/superuser.html" %}
 

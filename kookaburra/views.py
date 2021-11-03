@@ -1,7 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import generic as django_generic
 from django.views.generic import edit as django_edit
+
 from .models import KookaburraPost, KookaburraSection, KookaburraComment
 from . import forms as k_forms
 from . import operations as k_operations
@@ -9,7 +11,7 @@ from . import operations as k_operations
 # Create your views here.
 
 
-class GeneralView(django_generic.ListView):
+class GeneralView(LoginRequiredMixin, django_generic.ListView):
     """
     The "General" view is for all posts, and especially posts that
     don't have a home. It's provided as a "general chat" area.
@@ -28,7 +30,7 @@ class GeneralView(django_generic.ListView):
         return context
 
 
-class SectionView(django_generic.DetailView):
+class SectionView(LoginRequiredMixin, django_generic.DetailView):
     """
     Each of the SectionViews will have their own blurb and information
     And they will have their own post-retreiving QS's
@@ -39,8 +41,10 @@ class SectionView(django_generic.DetailView):
     context_object_name = "section"
 
 
-class PostView(django_generic.UpdateView):
+class PostView(LoginRequiredMixin, django_generic.DetailView):
     """
+    url: post/1234
+
     This is a DetailView of a specific Post, which is the meat of the forum,
     it has a form mixin for attaching comments to the post.
     """
@@ -49,17 +53,30 @@ class PostView(django_generic.UpdateView):
     template_name = "kookaburra/post.html"
     context_object_name = "post"
 
-    form_class = k_forms.AddCommentForm
+    # form_class = k_forms.AddCommentForm
 
-    def form_valid(self, form):
-        k_operations.add_comment(
-            self.object, form["content"].value(), self.request.user
-        )
-        return super().form_valid(form)
+    def get_context_data(self, **kwargs):
+        """
+        We add a comment_form to the detail view.
+        """
+        context = super().get_context_data(**kwargs)
+        context["comment_form"] = k_forms.AddCommentForm(initial={})
+        return context
 
 
 # --------------------------------------- Creation and posting view.
-class CreateNewPostView(django_generic.CreateView):
+class CommentOnPostView(LoginRequiredMixin, django_generic.CreateView):
+    model = KookaburraComment
+    fields = ["content"]
+
+    def form_valid(self, form):
+        # breakpoint()
+        post = get_object_or_404(KookaburraPost,**self.kwargs)
+        k_operations.add_comment(post, form["content"].value(), self.request.user)
+        return redirect(post.get_absolute_url())
+
+
+class CreateNewPostView(LoginRequiredMixin, django_generic.CreateView):
     """
     Create a new post in a section
     """
@@ -74,10 +91,36 @@ class CreateNewPostView(django_generic.CreateView):
 
     def get_initial(self):
         initial = super().get_initial()
-        initial["author"] = self.request.user
-
         section_slug = self.kwargs.get("slug", None)
         initial["section"] = KookaburraSection.objects.filter(slug=section_slug).first()
+        return initial
+
+    def get_form(self):
+        form = super().get_form()
+        form["section"].field.required = False
+        form["section"].field.empty_label = "General"
+        return form
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+
+class CreateNewSectionView(LoginRequiredMixin, django_generic.CreateView):
+    """
+    Create a new section
+    """
+
+    model = KookaburraSection
+    fields = [
+        "name",
+        "slug",
+        "description",
+    ]
+    template_name = "kookaburra/new/post.html"
+
+    def get_initial(self):
+        initial = super().get_initial()
         return initial
 
 
