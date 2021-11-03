@@ -13,7 +13,7 @@ class SectionAdmin(admin.ModelAdmin):
 
 
 class CommentAdmin(admin.ModelAdmin):
-    pass
+    list_display = ["parent", "content", "author"]
 
 
 admin.site.register(KookaburraPost, PostAdmin)
