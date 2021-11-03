@@ -4,7 +4,7 @@
 <hr>
 <h3> {{ post.title }} </h3>
 <h4> Posted in: <a href='{{post.section.get_absolute_url}}'>{{ post.section }}</a></h4>
-<p>Author: {{post.author}} </p>
+<p>Author: {{post.author.get_full_name }} </p>
 <p>Created: {{ post.created_at }} </p>
 <p>Last Updated: {{ post.updated_at }} </p>
 <p>Content: {{ post.content }} </p>
@@ -18,15 +18,17 @@
 {% for comment in post.comments.all %}
 <div class='post-comment'>
     <p>{{ comment.content }}</p>
-    <p>By: {{ comment.author }}</p>
+    <p>By: {{ comment.author.get_full_name }}</p>
 </div>
 {% empty %}
 <div class='post-comment'>
     There's no comments yet! 
 </div>
 {% endfor %}
-<h4>Make a comment:</h4>
 
-{% include "kookaburra/bits/base-form.html" %}
+<h4>Make a comment:</h4>
+{% include "kookaburra/bits/base-form.html" with form=comment_form %}
+
+{% include "kookaburra/bits/superuser.html" %}
 
 {% endblock%}

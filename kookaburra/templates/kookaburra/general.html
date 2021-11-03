@@ -3,7 +3,7 @@
 <h5> Posts:</h5>
 <ul>
 {% for post in general_posts %}
-<li><a href='{{post.get_absolute_url}}'>{{post.title}}</a></li>
+<li><a href='{{post.get_absolute_url}}'>{{post.title}}</a> in "{{post.section.name}}"</li>
 {% endfor %}
 </ul>
 
@@ -13,3 +13,5 @@
 <li><a href='{{section.get_absolute_url}}'>{{section.name}}</a></li>
 {% endfor %}
 </ul>
+
+{% include "kookaburra/bits/superuser.html" %}

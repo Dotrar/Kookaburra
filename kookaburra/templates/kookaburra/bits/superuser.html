@@ -1,0 +1,11 @@
+{% if user.is_superuser %}
+<div style='border:1px solid red; padding: 1.5em; margin: 1.5em;'>
+    Hello Superuser!~
+    <ul>
+        <li> <a href='/admin/'> Go To Admin </a> </li>
+        <li> <a href='{% url "new-section-view" %}'>Create A Section</a></li>
+        <li> <a href='{% url "new-post-view" %}'>Create A Post</a></li>
+    </ul>
+
+</div>
+{% endif %}

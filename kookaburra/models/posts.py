@@ -55,7 +55,11 @@ class KookaburraPost(models.Model):
 
     # Parent section, None = general.
     section = models.ForeignKey(
-        KookaburraSection, on_delete=models.SET_NULL, null=True, related_name="posts"
+        KookaburraSection,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="posts",
+        default=None,
     )
 
     # Literal Content of the post.
