@@ -1,30 +1,31 @@
-<h5>Individual Section View</h5>
-<hr>
+{% extends 'kookaburra/base.html' %}
+{% block base_content %}
 <h3> {{ section.name }} </h3>
 <p>
 {{section.description}}
 </p>
+
 <a href='{% url "general-view" %}'>Go back to General</a>
 
 <p> Make a new post <a href='{% url "new-post-view" section.slug %}'>here</a> </p>
 <p>Posts: <ul>
-    {% for post in section.posts.all %} 
-    {% include "kookaburra/bits/post-link-list.html" %}
-    {% endfor %}
+  {% for post in section.posts.all %} 
+  {% include "kookaburra/bits/post-link-list.html" %}
+  {% endfor %}
 </ul>
 </p>
-
 
 <p>Members: <ul>
-    {% for member in section.members.all %} 
-    <li>{{member}} </li>
-    {% endfor %}
+  {% for member in section.members.all %} 
+  <li>{{member}} </li>
+  {% endfor %}
 </ul>
 </p>
 
-<p>Followers: <ul>
-    {% for follower in section.followers.all %} 
-    <li>{{follower}} </li>
-    {% endfor %}
+<p>Followers: </p>
+<ul>
+  {% for follower in section.followers.all %} 
+  <li>{{follower}} </li>
+  {% endfor %}
 </ul>
-</p>
+{% endblock %}

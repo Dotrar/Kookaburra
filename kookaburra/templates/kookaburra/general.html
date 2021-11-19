@@ -1,17 +1,22 @@
-<h3> Kookaburra Home Page! </h3>
+{% extends 'kookaburra/base.html' %}
+{% block base_content %}
+<h3>Kookaburra Home Page! </h3>
 
-<h5> Posts:</h5>
-<ul>
+<h5>Posts:</h5>
+<hr>
 {% for post in general_posts %}
-<li><a href='{{post.get_absolute_url}}'>{{post.title}}</a> in "{{post.section.name}}"</li>
+<div class='card'>
+  <div class='card-body'>
+    <a href='{{post.get_absolute_url}}'>{{post.title}}</a> in "{{post.section.name}}"
+  </div>
+</div>
 {% endfor %}
-</ul>
+<hr>
 
-<h5> Sections:</h5>
-<ul>
-{% for section in sections %}
-<li><a href='{{section.get_absolute_url}}'>{{section.name}}</a></li>
-{% endfor %}
-</ul>
+<h5>Sections:</h5>
 
+{% if user.is_staff %}
 {% include "kookaburra/bits/superuser.html" %}
+{% endif %}
+
+{% endblock %}

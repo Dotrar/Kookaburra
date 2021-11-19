@@ -1,28 +1,39 @@
 {% extends "kookaburra/base.html" %}
-{% block content %}
+
+{% block base_content %}
 <h5>Individual Post View</h5>
 <hr>
-<h3> {{ post.title }} </h3>
-<h4> Posted in: <a href='{{post.section.get_absolute_url}}'>{{ post.section }}</a></h4>
-<p>Author: {{post.author.get_full_name }} </p>
-<p>Created: {{ post.created_at }} </p>
-<p>Last Updated: {{ post.updated_at }} </p>
-<p>Content: {{ post.content }} </p>
+<div class='card'>
+  <div class='card-header'>
+    <h3> {{ post.title }} </h3>
+  </div>
+  <div class='card-body'>
+    <p>Content: {{ post.content }} </p>
+  </div>
+  <div class='card-footer'>
+    <h4>Posted in: <a href='{{post.section.get_absolute_url}}'>{{ post.section }}</a></h4>
+    <p>Author: {{post.author.get_full_name }} </p>
+    <p>Created: {{ post.created_at }} </p>
+    <p>Last Updated: {{ post.updated_at }} </p>
+  </div>
+</div>
 <p>Followers: <ul>
-    {% for follower in  post.followers.all %} 
-    <li>{{follower}} </li>
-    {% endfor %}
-    </ul>
+  {% for follower in  post.followers.all %} 
+  <li>{{follower}} </li>
+  {% endfor %}
+</ul>
 </p>
 <hr>
 {% for comment in post.comments.all %}
-<div class='post-comment'>
+<div class='card my-2'>
+  <div class='card-body post-comment'>
     <p>{{ comment.content }}</p>
-    <p>By: {{ comment.author.get_full_name }}</p>
+  </div>
+  <div class='card-footer'> By: {{ comment.author.get_full_name }} </div>
 </div>
 {% empty %}
 <div class='post-comment'>
-    There's no comments yet! 
+  There's no comments yet! 
 </div>
 {% endfor %}
 

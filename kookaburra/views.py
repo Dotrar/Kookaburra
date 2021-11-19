@@ -1,8 +1,7 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import generic as django_generic
-from django.views.generic import edit as django_edit
 
 from .models import KookaburraPost, KookaburraSection, KookaburraComment
 from . import forms as k_forms
@@ -11,7 +10,19 @@ from . import operations as k_operations
 # Create your views here.
 
 
-class GeneralView(LoginRequiredMixin, django_generic.ListView):
+class KookaburraView(LoginRequiredMixin):
+    """
+    Needed for main view, provides the login-required
+    as well as section views and other favourite items
+    """
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["sections"] = KookaburraSection.objects.all()
+        return context
+
+
+class GeneralView(KookaburraView, django_generic.ListView):
     """
     The "General" view is for all posts, and especially posts that
     don't have a home. It's provided as a "general chat" area.
@@ -24,13 +35,8 @@ class GeneralView(LoginRequiredMixin, django_generic.ListView):
     template_name = "kookaburra/general.html"
     context_object_name = "general_posts"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["sections"] = KookaburraSection.objects.all()
-        return context
 
-
-class SectionView(LoginRequiredMixin, django_generic.DetailView):
+class SectionView(KookaburraView, django_generic.DetailView):
     """
     Each of the SectionViews will have their own blurb and information
     And they will have their own post-retreiving QS's
@@ -41,7 +47,7 @@ class SectionView(LoginRequiredMixin, django_generic.DetailView):
     context_object_name = "section"
 
 
-class PostView(LoginRequiredMixin, django_generic.DetailView):
+class PostView(KookaburraView, django_generic.DetailView):
     """
     url: post/1234
 
@@ -64,14 +70,17 @@ class PostView(LoginRequiredMixin, django_generic.DetailView):
         return context
 
 
+# ============================================
 # --------------------------------------- Creation and posting view.
+
+
 class CommentOnPostView(LoginRequiredMixin, django_generic.CreateView):
     model = KookaburraComment
     fields = ["content"]
 
     def form_valid(self, form):
         # breakpoint()
-        post = get_object_or_404(KookaburraPost,**self.kwargs)
+        post = get_object_or_404(KookaburraPost, **self.kwargs)
         k_operations.add_comment(post, form["content"].value(), self.request.user)
         return redirect(post.get_absolute_url())
 
