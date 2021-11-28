@@ -1,12 +1,41 @@
-<div class='sidebar m-1' style='border: 1px solid green;'>
+{% load static %}
+<div class='sidebar'>
 
   <h1>Kookaburra</h1>
 
   <hr>
-
+  <p> Hello {{user.firstname }}</p>
+  
+  <hr>
   <ul>
     {% for section in sections %}
     <li><a href='{{section.get_absolute_url}}'>{{section.name}}</a></li>
     {% endfor %}
   </ul>
+
+  <hr>
+
+  <p> Posts you're following: </p>
+
+  {% for post in user.posts_following.all %}
+  {% include 'kookaburra/bits/post-card-side.html' %}
+  {% endfor %}
+
+  <!-- <div class='card'> -->
+  <!--   <div class='card-body'> -->
+  <!--     <h1 class='card-title'> -->
+  <!--       Kookaburra -->
+  <!--     </h1> -->
+  <!--     <p class='card-text'> -->
+  <!--     Forums -->
+  <!--     </p> -->
+  <!--   </div> -->
+  <!--   <ul class="list-group list-group-flush"> -->
+  <!--     <li class="list-group-item">Cras justo odio</li> -->
+  <!--     <li class="list-group-item">Dapibus ac facilisis in</li> -->
+  <!--     <li class="list-group-item">Vestibulum at eros</li> -->
+  <!--   </ul> -->
+  <!-- </div> -->
+  <hr>
+{% include "kookaburra/bits/superuser.html" %}
 </div>

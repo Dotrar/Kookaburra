@@ -74,7 +74,7 @@ class PostView(KookaburraView, django_generic.DetailView):
 # --------------------------------------- Creation and posting view.
 
 
-class CommentOnPostView(LoginRequiredMixin, django_generic.CreateView):
+class CommentOnPostView(KookaburraView, django_generic.CreateView):
     model = KookaburraComment
     fields = ["content"]
 
@@ -85,7 +85,7 @@ class CommentOnPostView(LoginRequiredMixin, django_generic.CreateView):
         return redirect(post.get_absolute_url())
 
 
-class CreateNewPostView(LoginRequiredMixin, django_generic.CreateView):
+class CreateNewPostView(KookaburraView, django_generic.CreateView):
     """
     Create a new post in a section
     """
@@ -115,7 +115,7 @@ class CreateNewPostView(LoginRequiredMixin, django_generic.CreateView):
         return super().form_valid(form)
 
 
-class CreateNewSectionView(LoginRequiredMixin, django_generic.CreateView):
+class CreateNewSectionView(KookaburraView, django_generic.CreateView):
     """
     Create a new section
     """
@@ -128,9 +128,9 @@ class CreateNewSectionView(LoginRequiredMixin, django_generic.CreateView):
     ]
     template_name = "kookaburra/new/post.html"
 
-    def get_initial(self):
-        initial = super().get_initial()
-        return initial
+    # def get_initial(self):
+    #     initial = super().get_initial()
+    #     return initial
 
 
 class CreateNewPostCommentView(django_generic.CreateView):

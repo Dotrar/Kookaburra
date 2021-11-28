@@ -1,0 +1,18 @@
+{% load kookaburra_tags %}
+<div class='card mb-4'>
+  <div class='card-header'>
+    <em> in {{post.section|default:"General" }} </em>
+    {% user_is_following as following %}
+    {% if not following %}
+    <a href='' class='float-right btn btn-sm btn-success'>Follow</a>
+    {% else %}
+    <a href='' class='float-right btn btn-sm btn-danger'>Unfollow</a>
+    {% endif %}
+  </div>
+  <a href='{{post.get_absolute_url}}' class='card-link-highlight'>
+    <div class='card-body'>
+      <h5 class='card-title'>{{post.title}}</h5>
+      <p class='card-text'>{{post.preview}}</p>
+    </div>
+  </a> 
+</div>

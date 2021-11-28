@@ -1,16 +1,19 @@
 {% extends 'kookaburra/base.html' %}
 {% block base_content %}
-<h3> {{ section.name }} </h3>
-<p>
-{{section.description}}
-</p>
+<div class="jumbotron">
+  <h1 class="display-4">{{ section.name }}</h1>
+  <p class="lead">{{section.description }}</p>
+  <hr class="my-4">
+  <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
+  <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+</div>
 
 <a href='{% url "general-view" %}'>Go back to General</a>
 
 <p> Make a new post <a href='{% url "new-post-view" section.slug %}'>here</a> </p>
 <p>Posts: <ul>
   {% for post in section.posts.all %} 
-  {% include "kookaburra/bits/post-link-list.html" %}
+  {% include "kookaburra/bits/post-card.html" %}
   {% endfor %}
 </ul>
 </p>

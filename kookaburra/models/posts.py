@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.shortcuts import reverse
+from taggit.managers import TaggableManager
 
 # Create your models here.
 
@@ -20,6 +21,13 @@ class KookaburraSection(models.Model):
 
     # Metadata can be used to store some configuration things, such as theme colour, fa-icon
     metadata = models.JSONField(blank=True, default=dict)
+
+    coordinator = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name="coordinates_sections",
+        on_delete=models.SET_NULL,
+        null=True,
+    )
 
     # Members are a list of users that are in the group
     members = models.ManyToManyField(
@@ -53,6 +61,13 @@ class KookaburraPost(models.Model):
     - comments
     """
 
+    # define types of posts here. TYPE = ("full name","short name")
+    GENERAL_DISCUSSION = "General Discussion"
+
+    # this class is of type GENERAL_DISCUSSION
+    type = GENERAL_DISCUSSION
+    tags = TaggableManager()
+
     # Parent section, None = general.
     section = models.ForeignKey(
         KookaburraSection,
@@ -76,23 +91,40 @@ class KookaburraPost(models.Model):
         null=True,
     )
     # People who are interested in when this post receives changes.
-    followers = models.ManyToManyField(settings.AUTH_USER_MODEL)
+    followers = models.ManyToManyField(
+        settings.AUTH_USER_MODEL, related_name="posts_following"
+    )
 
     # Metadata can be used to store some bits of information; such as last user.
     metadata = models.JSONField(blank=True, default=dict)
 
     # permissions TODO
-
     commenting_allowed = models.BooleanField(default=True)
 
     def __str__(self):
         return f'"{self.title}" (in {self.section})'
 
     def get_absolute_url(self):
-        # TODO: gently  includ the slug here. By that, we can include it
+        # TODO: gently include the slug here. By that, we can include it
         # as often as possible to make human readable links, but we
         # will ignore it as often as possible because of human error.
         return reverse("post-detail", kwargs={"pk": self.id})
+
+    @property
+    def preview(self):
+        """
+        This is what's given in the preview when looking at posts in a list view.
+        """
+        return self.content
+
+    @property
+    def typename(self):
+        return self.type
+
+    @property
+    def typename_short(self):
+        "Just return the second word in type"
+        return self.type.split(" ")[-1]
 
 
 class KookaburraComment(models.Model):
